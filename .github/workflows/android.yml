@@ -12,21 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - uses: ruby/setup-ruby@v1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
 
       - name: Decode Android keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.jks
+          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.jks
           echo "KEYSTORE_PATH=$(pwd)/release.jks" >> $GITHUB_ENV
 
       - name: Build & Distribute (Fastlane)
@@ -39,4 +42,4 @@ jobs:
         run: |
           bundle exec fastlane android build \
             distribute=${{ github.ref == 'refs/heads/master' }} \
-            notes="${{ github.event.head_commit.message }}"
+            notes="${{ github.event.head_commit.message || 'CI build' }}"
