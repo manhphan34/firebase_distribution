@@ -1,0 +1,36 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build Android release (optional Firebase distribution)"
+  lane :build do |options|
+
+    distribute = options[:distribute] != false
+
+    gradle(
+      task: "assemble",
+      build_type: "Release"
+    )
+
+    apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+
+    if distribute
+      UI.message("🚀 Uploading to Firebase App Distribution")
+
+      firebase_app_distribution(
+        app: ENV["FIREBASE_APP_ID_ANDROID"],
+        groups: options[:groups] || "qa",
+        release_notes: options[:notes] || last_commit_message,
+        firebase_cli_token: ENV["FIREBASE_TOKEN"],
+        android_artifact_path: apk_path
+      )
+    else
+      UI.message("⛔ Skip Firebase distribution (distribute=false)")
+    end
+
+    UI.success("✅ Android build finished")
+  end
+end
+
+def last_commit_message
+  sh("git log -1 --pretty=%B").strip
+end

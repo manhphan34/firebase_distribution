@@ -30,6 +30,7 @@ jobs:
           echo "KEYSTORE_PATH=$(pwd)/release.jks" >> $GITHUB_ENV
 
       - name: Build & Distribute (Fastlane)
+        working-directory: Firebasedistribution
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}

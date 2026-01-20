@@ -1,0 +1,14 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build Android release APK (no distribution)"
+  lane :build do
+    gradle(
+      task: "assemble",
+      build_type: "Release"
+    )
+
+    UI.success("✅ Android release APK built successfully")
+  end
+end
+

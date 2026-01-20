@@ -13,3 +13,27 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Ruby / Bundler
+/vendor
+/.bundle
+
+# Android
+/build
+/app/build
+/.gradle
+
+# Fastlane
+/fastlane/report.xml
+/fastlane/README.md
+
+# Mac
+.DS_Store
+
+env.sh
+.env
+.env.local
+.env.dev
+.env.prod
+
+
